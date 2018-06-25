@@ -7,26 +7,31 @@ Here is sample documentation for the art-api-exam.
 Enter the following commands to clone the repo and install dependencies.
 
 ```
-$ git clone 
+$ git clone https://github.com/JoshuaPaulsen/art-api-exam.git
+$ cd art-api-exam
+$ npm install
 ```
 
+## Establish environment variables
 
-## Clone your repo (1)
-```
-Clone the repo by copying the link and typing , git clone <url> into your command line.
-```
-## Install dependencies (2)
-```
-The art-api relys on a ton of dependencies to run. You can get them all installed by typing npm install into your command line.
-```
-## Establish environment variables (3)
-```
-After completing steps 1-3 next you need to setup your environment variables. These are stored in a .env file. To create a .env file , in your command line inside of your clone directory you can type "touch .env" there you need to declare the following environment variables.
+Next, setup your environment variables. Create a **.env** file:
 
-- PORT = 5000
-- COUCH_HOSTNAME = <url template> http://"username":"password"@example.jrscode.cloud/
-- COUCH_DBNAME = "desired DBname"
 ```
+$ touch .env
+```
+
+Within the file declare the following environment variables.
+
+```
+PORT=5000
+COUCH_HOSTNAME = <url template> http://"username":"password"@example.jrscode.cloud/
+COUCH_DBNAME = "desired DBname"
+```
+
+1. one
+1. two
+1. three
+
 ## Load data (4)
 
 Using the file named load-data.js, create a program that adds the following paintings into a CouchDB database named {your first name}Art. Ex: jpart:
