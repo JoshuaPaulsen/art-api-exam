@@ -2,7 +2,7 @@ require("dotenv").config()
 const PouchDB = require("pouchdb-core")
 PouchDB.plugin(require("pouchdb-adapter-http"))
 
-const JPArtDB = new PouchDB(
+const db = new PouchDB(
   `${process.env.COUCH_HOSTNAME}${process.env.COUCH_DBNAME}`
 )
 
