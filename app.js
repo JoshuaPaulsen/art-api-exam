@@ -7,7 +7,12 @@ const NodeHTTPError = require("node-http-error")
 const { propOr, isEmpty, compose, not, join, pathOr } = require("ramda")
 const requiredFieldsChecker = require("./lib/required-fields-checker")
 
-const { listPaintings, getPainting, deletePainting } = require("./dal")
+const {
+  listPaintings,
+  getPainting,
+  deletePainting,
+  addPainting
+} = require("./dal")
 
 api.use(bodyParser.json())
 
@@ -16,7 +21,7 @@ api.get("/", function(req, res, next) {
 })
 
 // STEP 2
-api.post("/paintings", function(req, res, next) {
+api.post("/paintings", function(req, res, next, err) {
   const newPainting = propOr({}, "body", req)
   if (err) {
     next(

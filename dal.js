@@ -9,6 +9,10 @@ const db = new PouchDB(
   `${process.env.COUCH_HOSTNAME}${process.env.COUCH_DBNAME}`
 )
 
+const addPainting = (painting, callback) => {
+  db.put(newPainting, callback)
+}
+
 const getPainting = (paintings, callback) => db.get(paintings, callback)
 
 const listPaintings = limit =>
@@ -23,5 +27,6 @@ const deletePainting = (painting, callback) => {
 module.exports = {
   listPaintings,
   getPainting,
-  deletePainting
+  deletePainting,
+  addPainting
 }
