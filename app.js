@@ -7,7 +7,7 @@ const NodeHTTPError = require("node-http-error")
 const { propOr, isEmpty, compose, not, join, pathOr } = require("ramda")
 const requiredFieldsChecker = require("./lib/required-fields-checker")
 //const pkGen = require("pk-gen.js")
-const { listPaintings } = require("./dal")
+const { listPaintings, getPainting } = require("./dal")
 
 api.use(bodyParser.json())
 
@@ -16,7 +16,7 @@ api.get("/", function(req, res, next) {
 })
 
 // STEP 2
-api.post("/paitings", function(req, res, next) {
+api.post("/paintings", function(req, res, next) {
   const newPainting = propOr({}, "body", req)
   if (err) {
     next(
@@ -52,11 +52,56 @@ api.post("/paitings", function(req, res, next) {
   })
 })
 
-api.get("/paintings", function(req, res, next) {
-  const filteredlimit = Number(pathOr(10, ["query", "limit"], req))
-  listPaintings(filteredlimit)
+api.get("/paintings", (req, res, next) => {
+  const limit = Number(pathOr(10, ["query", "limit"], req)) // "10" or 10
+  listPaintings(limit)
     .then(paintings => res.status(200).send(paintings))
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
+})
+
+api.put("/paintings/:id", function(req, res, next) {
+  const updatePainting = propOr({}, "body", req)
+
+  if (isEmpty(updatePainting)) {
+    console.log("I dont have a painting")
+    next(
+      new NodeHTTPError(
+        400,
+        "Add a painting to the request body.  Ensure the Content-Type is application/json."
+      )
+    )
+  }
+  const missingFields = requiredFieldsChecker(
+    ["name", "movement", "artist", "yearCreated", "musem"],
+    newPainting
+  )
+  const sendMissingFieldsError = compose(
+    not,
+    isEmpty
+  )(missingFields)
+
+  if (sendMissingFieldsError) {
+    next(
+      new NodeHTTPError(
+        400,
+        "Sorry, you didnt pass the required fields check reffer to the documentation and try again."
+      )
+    )
+  }
+
+  updatePainting(updatedPainting, function(err, result) {
+    if (err) next(new NodeHTTPError(err.status, err.message))
+    res.status(200).send(result)
+  })
+})
+
+api.delete("/paintings/:id", function(req, res, next) {
+  deletePainting(req.params.paintingsID, function(err, data) {
+    if (err) {
+      next(new NodeHTTPError(err.status, err.message, err))
+    }
+    res.status(200).send(data)
+  })
 })
 
 api.listen(port, () => console.log("Art API is up!", port))
