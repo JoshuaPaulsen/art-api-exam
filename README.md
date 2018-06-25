@@ -1,11 +1,16 @@
 # art-api-exam
-```
+
 Here is sample documentation for the art-api-exam.
-```
+
 ## Getting Started
+
+Enter the following commands to clone the repo and install dependencies.
+
 ```
-Within the Getting Started section provide guidance on how to:
+$ git clone 
 ```
+
+
 ## Clone your repo (1)
 ```
 Clone the repo by copying the link and typing , git clone <url> into your command line.
