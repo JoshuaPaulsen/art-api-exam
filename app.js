@@ -6,7 +6,7 @@ const bodyParser = require("body-parser")
 const NodeHTTPError = require("node-http-error")
 const { propOr, isEmpty, compose, not, join, pathOr } = require("ramda")
 const requiredFieldsChecker = require("./lib/required-fields-checker")
-const pkGen = require("pk-gen.js")
+//const pkGen = require("pk-gen.js")
 const { listPaintings } = require("./dal")
 
 api.use(bodyParser.json())
@@ -52,9 +52,9 @@ api.post("/paitings", function(req, res, next) {
   })
 })
 
-api.get("/paintings/", function(req, res, next) {
-  const filteredlimit = Number(pathOr(5, ["query", "limit"], req))
-  listBoards(filteredlimit)
+api.get("/paintings", function(req, res, next) {
+  const filteredlimit = Number(pathOr(10, ["query", "limit"], req))
+  listPaintings(filteredlimit)
     .then(paintings => res.status(200).send(paintings))
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
 })

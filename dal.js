@@ -3,7 +3,7 @@ const PouchDB = require("pouchdb-core")
 PouchDB.plugin(require("pouchdb-adapter-http"))
 
 const { merge, prop, map } = require("ramda")
-const pkGen = require("pk-gen.js")
+//const pkGen = require("pk-gen.js")
 
 const db = new PouchDB(
   `${process.env.COUCH_HOSTNAME}${process.env.COUCHDB_NAME}`
