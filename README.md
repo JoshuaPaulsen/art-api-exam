@@ -24,17 +24,20 @@ Within the file declare the following environment variables.
 
 ```
 PORT=5000
-COUCH_HOSTNAME = <url template> http://"username":"password"@example.jrscode.cloud/
-COUCH_DBNAME = "desired DBname"
+COUCH_HOSTNAME=http://"username":"password"@example.jrscode.cloud/
+COUCH_DBNAME=YOURDBNAME
 ```
 
-1. one
-1. two
-1. three
+## Load sample data 
 
-## Load data (4)
+If you want to play with sample data, run the following command to create your database and load the sample data:
 
-Using the file named load-data.js, create a program that adds the following paintings into a CouchDB database named {your first name}Art. Ex: jpart:
+```
+$ node run load
+```
+
+The above command will load the documents into couch. 
+
 
 ```
 [
@@ -94,9 +97,14 @@ Using the file named load-data.js, create a program that adds the following pain
   }
 ]
 ```
-Within your package.json, create a load script that runs your load-data.js program.
 
-## Start the API (5)
+
+## Start the API 
+
+The following command starts the API on [http://localhost:5000/](http://localhost:5000/).
+
 ```
-After completing all the steps listed, run npm start in your command line to get the art-api up and running.
+$ npm start
 ```
+
+Once started, point your browser to [http://localhost:5000/](http://localhost:5000/).
