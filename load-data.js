@@ -65,3 +65,12 @@ const paintings = [
     museum: { name: "Musée d’Orsay", location: "Paris" }
   }
 ]
+
+db.bulkDocs(paintings, function(err, data) {
+  if (err) {
+    console.log("ERROR", JSON.stringify(err))
+    return
+  }
+
+  console.log("SUCCESS!", JSON.stringify(data, null, 2))
+})
