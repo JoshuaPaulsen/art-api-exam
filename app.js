@@ -52,6 +52,11 @@ api.post("/paitings", function(req, res, next) {
   })
 })
 
-api.get("/paintings/:id", function(req, res, next) {})
+api.get("/paintings/", function(req, res, next) {
+  const filteredlimit = Number(pathOr(5, ["query", "limit"], req))
+  listBoards(filteredlimit)
+    .then(paintings => res.status(200).send(paintings))
+    .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
+})
 
 api.listen(port, () => console.log("Art API is up!", port))
