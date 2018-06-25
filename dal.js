@@ -16,7 +16,12 @@ const listPaintings = limit =>
     .allDocs({ include_docs: true, limit })
     .then(response => map(prop("doc"), response.rows))
 
+const deletePainting = (painting, callback) => {
+  db.remove(painting, callback)
+}
+
 module.exports = {
   listPaintings,
-  getPainting
+  getPainting,
+  deletePainting
 }

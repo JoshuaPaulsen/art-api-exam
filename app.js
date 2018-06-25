@@ -7,7 +7,7 @@ const NodeHTTPError = require("node-http-error")
 const { propOr, isEmpty, compose, not, join, pathOr } = require("ramda")
 const requiredFieldsChecker = require("./lib/required-fields-checker")
 //const pkGen = require("pk-gen.js")
-const { listPaintings, getPainting } = require("./dal")
+const { listPaintings, getPainting, deletePainting } = require("./dal")
 
 api.use(bodyParser.json())
 
