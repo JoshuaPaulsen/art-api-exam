@@ -32,7 +32,7 @@ api.post("/paintings", function(req, res, next, err) {
     )
   }
   const missingFields = requiredFieldsChecker(
-    ["name", "movement", "artist", "yearCreated", "musem"],
+    ["name", "movement", "artist", "yearCreated", "museum"],
     newPainting
   )
   const sendMissingFieldsError = compose(
