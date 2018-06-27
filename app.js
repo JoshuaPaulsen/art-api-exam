@@ -1,102 +1,110 @@
-require("dotenv").config()
-const express = require("express")
-const api = express("express")
+require('dotenv').config()
+const express = require('express')
+const api = express('express')
 const port = process.env.PORT || 5000
-const bodyParser = require("body-parser")
-const NodeHTTPError = require("node-http-error")
-const { propOr, isEmpty, compose, not, join, pathOr } = require("ramda")
-const requiredFieldsChecker = require("./lib/required-fields-checker")
+const bodyParser = require('body-parser')
+const NodeHTTPError = require('node-http-error')
+const { propOr, isEmpty, compose, not, join, pathOr } = require('ramda')
+const requiredFieldsChecker = require('./lib/required-fields-checker')
 
 const {
   listPaintings,
   getPainting,
   deletePainting,
-  addPainting
-} = require("./dal")
+  addPainting,
+  updatePainting
+} = require('./dal')
 
 api.use(bodyParser.json())
 
-api.get("/", function(req, res, next) {
-  res.send("Welcome to the Art API. Manage all the paintings.")
+api.get('/', function(req, res, next) {
+  res.send('Welcome to the Art API. Manage all the paintings.')
 })
 
 // STEP 2
-api.post("/paintings", function(req, res, next, err) {
-  const newPainting = propOr({}, "body", req)
-  if (err) {
+api.post('/paintings', function(req, res, next) {
+  const newPainting = propOr({}, 'body', req)
+  if (isEmpty(newPainting)) {
     next(
       new NodeHTTPError(
         400,
-        "You dropped a paint brush, make sure you add a painting to the request body.  Ensure the Content-Type is application/json."
+        'You dropped a paint brush, make sure you add a painting to the request body.  Ensure the Content-Type is application/json.'
       )
     )
   }
   const missingFields = requiredFieldsChecker(
-    ["name", "movement", "artist", "yearCreated", "museum"],
+    ['name', 'movement', 'artist', 'yearCreated', 'museum'],
     newPainting
   )
-  const sendMissingFieldsError = compose(
-    not,
-    isEmpty
-  )(missingFields)
+  const sendMissingFieldsError = compose(not, isEmpty)(missingFields)
 
   if (sendMissingFieldsError) {
     next(
       new NodeHTTPError(
         400,
-        "Sorry, you didnt pass the required fields check reffer to the documentation and try again."
+        'Sorry, you didnt pass the required fields check reffer to the documentation and try again.'
       )
     )
   }
 
   addPainting(newPainting, function(err, result) {
     if (err) {
-      next(new NodeHTTPError(err.status, err.message, { ...err, author: "jp" }))
+      next(new NodeHTTPError(err.status, err.message, { ...err, author: 'jp' }))
     }
     res.status(201).send(results)
   })
 })
 
-api.get("/paintings", (req, res, next) => {
-  const limit = Number(pathOr(10, ["query", "limit"], req)) // "10" or 10
+api.get('/paintings', (req, res, next) => {
+  const limit = Number(pathOr(10, ['query', 'limit'], req)) // "10" or 10
   listPaintings(limit)
     .then(paintings => res.status(200).send(paintings))
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
 })
 
-api.get("/paintings/:id", (req, res, next) => {
-  const limit = Number(pathOr(10, ["query", "limit"], req)) // "10" or 10
+api.get('/paintings/:id', (req, res, next) => {
+  const limit = Number(pathOr(10, ['query', 'limit'], req)) // "10" or 10
   listPaintings(limit)
     .then(paintings => res.status(200).send(paintings))
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
 })
 
-api.put("/paintings/:id", function(req, res, next) {
-  const updatePainting = propOr({}, "body", req)
+api.put('/paintings/:id', function(req, res, next) {
+  const updatedPainting = propOr({}, 'body', req)
 
-  if (isEmpty(updatePainting)) {
-    console.log("I dont have a painting")
+  if (isEmpty(updatedPainting)) {
+    console.log('I dont have a painting')
     next(
       new NodeHTTPError(
         400,
-        "Add a painting to the request body.  Ensure the Content-Type is application/json."
+        'Add a painting to the request body.  Ensure the Content-Type is application/json.'
       )
     )
   }
   const missingFields = requiredFieldsChecker(
-    ["name", "movement", "artist", "yearCreated", "musem"],
-    newPainting
+    [
+      '_id',
+      '_rev',
+      'type',
+      'name',
+      'movement',
+      'artist',
+      'yearCreated',
+      'museum'
+    ],
+    updatedPainting
   )
-  const sendMissingFieldsError = compose(
-    not,
-    isEmpty
-  )(missingFields)
+
+  console.log('missingFields', missingFields)
+
+  const sendMissingFieldsError = compose(not, isEmpty)(missingFields)
+  console.log('sendMissingFieldsError', sendMissingFieldsError)
 
   if (sendMissingFieldsError) {
     next(
       new NodeHTTPError(
         400,
-        "Sorry, you didnt pass the required fields check reffer to the documentation and try again."
+        'Sorry, you didnt pass the required fields check reffer to the documentation and try again.'
       )
     )
   }
@@ -107,7 +115,7 @@ api.put("/paintings/:id", function(req, res, next) {
   })
 })
 
-api.delete("/paintings/:id", function(req, res, next) {
+api.delete('/paintings/:id', function(req, res, next) {
   deletePainting(req.params.paintingsID, function(err, data) {
     if (err) {
       next(new NodeHTTPError(err.status, err.message, err))
@@ -116,4 +124,4 @@ api.delete("/paintings/:id", function(req, res, next) {
   })
 })
 
-api.listen(port, () => console.log("Art API is up!", port))
+api.listen(port, () => console.log('Art API is up!', port))
