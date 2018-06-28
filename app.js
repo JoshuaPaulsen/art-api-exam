@@ -64,7 +64,7 @@ api.get('/paintings', (req, res, next) => {
 
 api.get('/paintings/:id', (req, res, next) => {
   const limit = Number(pathOr(10, ['query', 'limit'], req)) // "10" or 10
-  listPaintings(limit)
+  getPainting(req.params.id)
     .then(paintings => res.status(200).send(paintings))
     .catch(err => next(new NodeHTTPError(err.status, err.message, err)))
 })
@@ -116,12 +116,17 @@ api.put('/paintings/:id', function(req, res, next) {
 })
 
 api.delete('/paintings/:id', function(req, res, next) {
-  deletePainting(req.params.paintingsID, function(err, data) {
+  deletePainting(req.params.id, function(err, deletedResult) {
     if (err) {
       next(new NodeHTTPError(err.status, err.message, err))
     }
-    res.status(200).send(data)
+    res.status(200).send(deletedResult)
   })
+})
+
+api.use(function(err, req, res, next) {
+  console.log('Error Handling Middleware has fired!', JSON.stringify(err))
+  res.status(err.status).send(err)
 })
 
 api.listen(port, () => console.log('Art API is up!', port))

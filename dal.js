@@ -17,15 +17,29 @@ const updatePainting = (painting, callback) => {
   db.put(painting, callback)
 }
 
-const getPainting = (paintings, callback) => db.get(paintings, callback)
+const getPainting = paintingID => db.get(paintingID)
 
 const listPaintings = limit =>
   db
     .allDocs({ include_docs: true, limit })
     .then(response => map(prop('doc'), response.rows))
 
-const deletePainting = (painting, callback) => {
-  db.remove(painting, callback)
+const deletePainting = (paintingID, callback) => {
+  return db.get(paintingID, function(err, retrievedDocument) {
+    if (err) {
+      callback(err)
+      return
+    }
+
+    db.remove(retrievedDocument, function(err, removedResult) {
+      if (err) {
+        callback(err)
+        return
+      }
+      callback(null, removedResult)
+      return
+    })
+  })
 }
 
 module.exports = {
